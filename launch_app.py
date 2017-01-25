@@ -10,28 +10,32 @@ import os
 # Connection to MongoDB
 client = MongoClient('localhost', 27017)
 db = client['election']
-collection = db['vote']
+collection_state = db['state']
+collection_result = db['result_by_state']
+
+# Fonction qui retourne toutes les données de résultat agrégées
+def get_all_data():
+    result = pd.DataFrame(list(collection_result.find()))
+    state = pd.DataFrame(list(collection_state.find()))
+    state['state_code'] = state['state_code'].str.lower()
+    complete_result = pd.merge(result, state, on='state_name')
+    return complete_result
+
+# Fonction qui retourne pour chaque état les résultats
+def get_victory_by_state (complete_result):
+    idx_winner = complete_result.groupby(['state_code'])['nb_of_vote'].transform(max) == complete_result['nb_of_vote']
+    data_victory = complete_result[idx_winner][["state_code", "candidate"]].as_matrix()
+    data_victory = data_victory.tolist()
+    return data_victory
+
+# Fonction qui retourne le nombre de votes par etat et par candidat
+def get_nb_of_votes (complete_result):
+    nb_votes = complete_result[["state_code", "candidate", "nb_of_vote"]].as_matrix()
+    nb_votes = nb_votes.tolist()
+    return nb_votes
+
 
 app = Flask(__name__)
-
-data_victory = [
-    ["mo", "Clinton"],
-    ["ks", "Trump"],
-    ["or", "Trump"]
-]
-
-
-nb_votes = [
-    ["mo", "Clinton", 98726],
-    ["mo", "Trump", 62524],
-    ["mo", "Dupont", 14253],
-    ["ks", "Clinton", 52423],
-    ["ks", "Trump", 52441],
-    ["ks", "Dupont", 1526],
-    ["or", "Clinton", 938735],
-    ["or", "Trump", 162552],
-    ["or", "Dupont", 14253],
-]
 
 
 @app.route('/background_process_indicators')
@@ -53,17 +57,19 @@ def background_process_map():
     global index_victory
     if index_victory < 4:
         index_victory += 1
+    complete_result = get_all_data()
+    data_victory = get_victory_by_state(complete_result)
+    nb_votes = get_nb_of_votes(complete_result)
     try:
         print('in background_process_map!')
-        return jsonify(data_victory_process=data_victory[0:index_victory])
-        #return jsonify(data_victory_process="test_from_python")
-
+        return jsonify(data_victory_process=data_victory[0:index_victory], nb_votes_process=nb_votes)
     except Exception as e:
         return str(e)
 
 @app.route('/')
 def index():
-    return render_template('index.html', data_victory=data_victory, nb_votes=nb_votes)
+    complete_result = get_all_data()
+    return render_template('index.html')
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ $(function load_data_map() {
 
 
       var data_victory = data.data_victory_process;
+      var nb_votes = data.nb_votes_process;
 
       $('#world-map-gdp').empty();
 
@@ -26,7 +27,7 @@ $(function load_data_map() {
 
           }
         }
-      console.log(colors);
+
       var max = 0,
         min = Number.MAX_VALUE,
         cc,
@@ -51,6 +52,8 @@ $(function load_data_map() {
                 $('#title_state').text("Etat : " + region);
 
                 state_clicked.value = code;
+                state_clicked.nb_votes = nb_votes;
+
                 jQuery.ajaxSetup({
                   cache: false
                 });
