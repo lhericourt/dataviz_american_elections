@@ -3,12 +3,10 @@ from pymongo import MongoClient
 import json
 from bson import json_util
 from bson.json_util import dumps
-import chartkick
 import pandas  as pd
-import os
 
 # Connection to MongoDB
-client = MongoClient('localhost', 27017)
+client = MongoClient("localhost", 27017)
 db = client['election']
 collection_state = db['state']
 collection_result = db['result_by_state']
