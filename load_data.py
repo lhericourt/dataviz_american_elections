@@ -6,50 +6,50 @@ import time
 import re
 from collections import Counter
 
-# DB = "election"
+DB = "election"
 
-# VOTE = "vote"
-# STATE = "state"
-# RESULT_BY_STATE = "result_by_state"
+VOTE = "vote"
+STATE = "state"
+RESULT_BY_STATE = "result_by_state"
 
 
-# client = MongoClient('localhost', 27017)
-# db = client[DB]
-# collection_vote = db[VOTE]
-# collection_state = db[STATE]
-# collection_result_by_state = db[RESULT_BY_STATE]
+client = MongoClient('localhost', 27017)
+db = client[DB]
+collection_vote = db[VOTE]
+collection_state = db[STATE]
+collection_result_by_state = db[RESULT_BY_STATE]
 
-# basename = "data1"
-# vote_file_list = glob.glob(basename+"/*.txt")
+basename = "data1"
+vote_file_list = glob.glob(basename+"/*.txt")
 
-# minute = 1
-# while minute <= 60:
-# 	if len(str(minute)) < 2:
-# 		min_str = '0'+str(minute)
-# 	else:
-# 		min_str = str(minute)
-# 	#print (min_str)
-# 	res = [f for f in vote_file_list if re.search(re.escape(basename) + r'\\\d{4}-\d{2}-\d{2}-\d{2}-'+re.escape(min_str)+r'_\w*.txt', f)]
+minute = 1
+while minute <= 60:
+	if len(str(minute)) < 2:
+		min_str = '0'+str(minute)
+	else:
+		min_str = str(minute)
+	#print (min_str)
+	res = [f for f in vote_file_list if re.search(re.escape(basename) + r'\\\d{4}-\d{2}-\d{2}-\d{2}-'+re.escape(min_str)+r'_\w*.txt', f)]
 
-# 	for vote_file in res:
-# 		print ("File: "+vote_file)
-# 		with open(vote_file) as f:
-# 			lines = f.readlines()
-# 			nb_electors = 0
-# 			#cnt = Counter()
-# 			for i, line in enumerate(lines):
-# 				line = line.split(",")
-# 				#cnt.update([line[2].strip()])
-# 				data_result_by_state = {}
-# 				data_result_by_state["candidate"] = line[2].strip()
-# 				data_result_by_state["state_name"] = line[1].strip()
-# 				data_result_by_state["nb_of_votes"] = line[3].strip()
-# 				#print(data_result_by_state)
-# 				collection_result_by_state.insert(data_result_by_state)
-# 	time.sleep(60)
-# 	minute = minute + 1
-# 	if (minute == 60):
-# 		break
+	for vote_file in res:
+		print ("File: "+vote_file)
+		with open(vote_file) as f:
+			lines = f.readlines()
+			nb_electors = 0
+			#cnt = Counter()
+			for i, line in enumerate(lines):
+				line = line.split(",")
+				#cnt.update([line[2].strip()])
+				data_result_by_state = {}
+				data_result_by_state["candidate"] = line[2].strip()
+				data_result_by_state["state_name"] = line[1].strip()
+				data_result_by_state["nb_of_votes"] = line[3].strip()
+				#print(data_result_by_state)
+				collection_result_by_state.insert(data_result_by_state)
+	time.sleep(60)
+	minute = minute + 1
+	if (minute == 60):
+		break
 
 
 
@@ -76,9 +76,9 @@ from collections import Counter
 
 # print ("somme "+str(nb_of_votes))
 
-print (format(6270255, ",d"))
-val = 6270255 /1000000
-print ((format(val, ",f"))[:5])
-val1 = 200000 /1000000
-print ((format(val1, ",f"))[:5])
+# print (format(6270255, ",d"))
+# val = 6270255 /1000000
+# print ((format(val, ",f"))[:5])
+# val1 = 200000 /1000000
+# print ((format(val1, ",f"))[:5])
 
