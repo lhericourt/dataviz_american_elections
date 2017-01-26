@@ -24,7 +24,7 @@
     <!-- bootstrap-daterangepicker -->
     <link href="static/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <!-- Custom Theme Style -->
-    <link href="static/build/css/custom.min.css" rel="stylesheet">
+    <link href="static/build/css/custom.css" rel="stylesheet">
   </head>
 
   <body class="nav-md">
@@ -260,35 +260,47 @@
                       </td>
                       <td>
                         <table class="tile_info">
-                          <tr>
+                          <tr id="clinton">
                             <td>
                               <p><i class="fa fa-square blue"></i>Clinton </p>
                             </td>
                             <td id="result_clinton">0</td>
                           </tr>
-                          <tr>
+                          <tr id="trump">
                             <td>
                               <p><i class="fa fa-square red"></i>Trump </p>
                             </td>
                             <td id="result_trump">0</td>
                           </tr>
-                          <tr>
+                          <tr id="johnson">
                             <td>
-                              <p><i class="fa fa-square purple"></i>Dupont </p>
+                              <p><i class="fa fa-square purple"></i>Johnson </p>
                             </td>
-                            <td id="result_dupont">0</td>
+                            <td id="result_johnson">0</td>
                           </tr>
-                          <tr>
+                          <tr id="stein">
                             <td>
-                              <p><i class="fa fa-square green"></i>Autre 1 </p>
+                              <p><i class="fa fa-square green"></i>Stein </p>
                             </td>
-                            <td>0</td>
+                            <td id="result_stein">0</td>
                           </tr>
-                          <tr>
+                          <tr id="castle">
                             <td>
-                              <p><i class="fa fa-square aero"></i>Autre 2 </p>
+                              <p><i class="fa fa-square aero"></i>Castle </p>
                             </td>
-                            <td>0</td>
+                            <td id="result_castle">0</td>
+                          </tr>
+                          <tr id="autre">
+                            <td>
+                              <p><i class="fa fa-square dark"></i>Autre </p>
+                            </td>
+                            <td id="result_autre">0</td>
+                          </tr>
+                          <tr id="blanc">
+                            <td>
+                              <p><i class="fa fa-square yellow"></i>Blanc </p>
+                            </td>
+                            <td id="result_blanc">0</td>
                           </tr>
                         </table>
                       </td>
@@ -401,13 +413,11 @@
     <script src="static/build/js/custom.min.js"></script>
     <!-- import custo lht -->
     <script>
-        var nb_votes = {{ nb_votes|safe }};
-        // var data_victory = {{ data_victory|safe }};
-        var state_clicked = {value:"nan"};
+        var state_clicked = {value:"nan", nb_votes:{}};
     </script>
-    <!--<script src="static/maps/jquery.vmap.usa.js" charset="utf-8"></script>-->
-    <!--<script src="static/custo/map.js" charset="utf-8"></script>-->
-    <!--<script src="static/custo/pie.js" charset="utf-8"></script>-->
+    <script src="static/maps/jquery.vmap.usa.js" charset="utf-8"></script>
+    <script src="static/custo/map.js" charset="utf-8"></script>
+    <script src="static/custo/pie.js" charset="utf-8"></script>
     <script src="static/custo/indicators.js" charset="utf-8"></script>
 
     <!-- Flot -->
