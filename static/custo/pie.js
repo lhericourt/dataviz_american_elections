@@ -30,6 +30,12 @@ $(document).ready(function() {
             nb_votes : 0,
             color_pie : "#9CC2CB"
         },
+        "McMullin":
+        {
+            nom : "Autre",
+            nb_votes : 0,
+            color_pie : "#34495E"
+        },
         "Autre":
         {
             nom : "Autre",
@@ -62,6 +68,7 @@ $(document).ready(function() {
         $('#result_johnson').text(candidats["Johnson"].nb_votes);
         $('#result_stein').text(candidats["Stein"].nb_votes);
         $('#result_castle').text(candidats["Castle"].nb_votes);
+        $('#result_mcmullin').text(candidats["McMullin"].nb_votes);
         $('#result_autre').text(candidats["Autre"].nb_votes);
         $('#result_blanc').text(candidats["Blanc"].nb_votes);
 
@@ -107,6 +114,12 @@ $(document).ready(function() {
             $('#blanc').attr("hidden", false);
         }
 
+        if(candidats["McMullin"].nb_votes == 0){
+            $('#mcmullin').attr("hidden", true);
+        } else {
+            $('#mcmullin').attr("hidden", false);
+        }
+
 
         var options = {
           legend: false,
@@ -119,11 +132,10 @@ $(document).ready(function() {
           type: 'doughnut',
           tooltipFillColor: "rgba(51, 51, 51, 0.55)",
           data: {
-            labels: [candidats["Clinton"].nom, candidats["Trump"].nom, candidats["Johnson"].nom, candidats["Stein"].nom, candidats["Castle"].nom, candidats["Autre"].nom, candidats["Blanc"].nom],
+            labels: [candidats["Clinton"].nom, candidats["Trump"].nom, candidats["Johnson"].nom, candidats["Stein"].nom, candidats["Castle"].nom, candidats["McMullin"].nom, candidats["Autre"].nom, candidats["Blanc"].nom],
             datasets: [{
-              data: [candidats["Clinton"].nb_votes, candidats["Trump"].nb_votes, candidats["Johnson"].nb_votes, candidats["Stein"].nb_votes, candidats["Castle"].nb_votes, candidats["Autre"].nb_votes, candidats["Blanc"].nb_votes],
-              backgroundColor: [candidats["Clinton"].color_pie, candidats["Trump"].color_pie, candidats["Johnson"].color_pie, candidats["Stein"].color_pie, candidats["Castle"].color_pie, candidats["Autre"].color_pie, candidats["Blanc"].color_pie],
-              //hoverBackgroundColor: [candidats["Clinton"].color_hover, candidats["Trump"].color_hover, candidats["Dupont"].color_hover]
+              data: [candidats["Clinton"].nb_votes, candidats["Trump"].nb_votes, candidats["Johnson"].nb_votes, candidats["Stein"].nb_votes, candidats["Castle"].nb_votes, candidats["McMullin"].nb_votes, candidats["Autre"].nb_votes, candidats["Blanc"].nb_votes],
+              backgroundColor: [candidats["Clinton"].color_pie, candidats["Trump"].color_pie, candidats["Johnson"].color_pie, candidats["Stein"].color_pie, candidats["Castle"].color_pie, candidats["McMullin"].color_pie, candidats["Autre"].color_pie, candidats["Blanc"].color_pie],
             }]
           },
           options: options
