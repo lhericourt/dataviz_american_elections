@@ -74,7 +74,7 @@ $(function load_data_map() {
 
 
 
-         setTimeout(load_data_map, 500000);
+         setTimeout(load_data_map, 5000);
 
 
 

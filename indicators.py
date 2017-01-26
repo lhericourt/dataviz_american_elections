@@ -3,7 +3,7 @@ VOTE_BLANC = "Blanc"
 VOTE_REPUBLICAIN = "Trump"
 VOTE_DEMOCRATE = "Clinton"
 
-result_by_state_nb_of_votes = "nb_of_votes"
+result_by_state_nb_of_votes = "nb_of_vote"
 result_by_state_candidate = "candidate"
 result_by_state_name = "state_name"
 state_nb_subscriptors  = "nb_subscriptors"

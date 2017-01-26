@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
       var candidats = {
         "Clinton":
         {
@@ -46,10 +45,16 @@ $(document).ready(function() {
       };
 
       for (var i = 0; i < state_clicked.nb_votes.length; i++) {
+        console.log(state_clicked.nb_votes[i][0]);
             if(state_clicked.nb_votes[i][0] == state_clicked.value){
+                console.log(state_clicked.nb_votes[i][2]);
+                console.log(candidats[state_clicked.nb_votes[i][1]]);
                 candidats[state_clicked.nb_votes[i][1]].nb_votes = state_clicked.nb_votes[i][2];
+
             }
         }
+
+        console.log(candidats);
 
       $(document).ready(function(){
         $('#result_clinton').text(candidats["Clinton"].nb_votes);

@@ -38,14 +38,15 @@ while minute <= 60:
 			nb_electors = 0
 			#cnt = Counter()
 			for i, line in enumerate(lines):
-				line = line.split(",")
-				#cnt.update([line[2].strip()])
-				data_result_by_state = {}
-				data_result_by_state["candidate"] = line[2].strip()
-				data_result_by_state["state_name"] = line[1].strip()
-				data_result_by_state["nb_of_votes"] = line[3].strip()
-				#print(data_result_by_state)
-				collection_result_by_state.insert(data_result_by_state)
+				if (i != 0):
+					line = line.split(",")
+					#cnt.update([line[2].strip()])
+					data_result_by_state = {}
+					data_result_by_state["candidate"] = line[2].strip()
+					data_result_by_state["state_name"] = line[1].strip()
+					data_result_by_state["nb_of_vote"] = int(line[3].strip())
+					#print(data_result_by_state)
+					collection_result_by_state.insert(data_result_by_state)
 	time.sleep(60)
 	minute = minute + 1
 	if (minute == 60):
