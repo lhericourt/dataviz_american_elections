@@ -4,28 +4,17 @@ import json
 from bson import json_util
 from bson.json_util import dumps
 import pandas  as pd
-<<<<<<< HEAD
+
 import os
 from indicators import *
 import locale
 
-DB = "election"
-STATE = "state"
-RESULT_BY_STATE = "result_by_state"
-
-# Connection to MongoDB
-client = MongoClient('localhost', 27017)
-db = client[DB]
-collection_state = db[STATE]
-collection_result_by_state = db[RESULT_BY_STATE]
-=======
 
 # Connection to MongoDB
 client = MongoClient("localhost", 27017)
 db = client['election']
 collection_state = db['state']
 collection_result = db['result_by_state']
->>>>>>> 261685a526983e6c9ad3b4e6b45fdaa83b4af00c
 
 # Fonction qui retourne toutes les données de résultat agrégées
 def get_all_data():
@@ -59,7 +48,7 @@ def background_process_indicators():
         print('====== in background_process_indicators! =====')
         #candidate = request.args.get('candidate', "", type=str)
 
-        nb_of_votes, nb_of_suffrages, nb_Abstention, nb_of_votes_republicains, nb_of_votes_democrates, nb_of_votes_autres = get_indicators(collection_result_by_state,collection_state)
+        nb_of_votes, nb_of_suffrages, nb_Abstention, nb_of_votes_republicains, nb_of_votes_democrates, nb_of_votes_autres = get_indicators(collection_result,collection_state)
 
         print ("votants = "+str(nb_of_votes)+" sufrages = "+str(nb_of_suffrages)+" Abstention = "+str(nb_Abstention)+" republicains = "+str(nb_of_votes_republicains)+" democrates = "+str(nb_of_votes_democrates)+" autres = "+str(nb_of_votes_autres))
 
@@ -93,21 +82,13 @@ def background_process_map():
     data_victory = get_victory_by_state(complete_result)
     nb_votes = get_nb_of_votes(complete_result)
     try:
-<<<<<<< HEAD
-        print('===== in background_process_map! =====')
-        #return jsonify(data_victory_process=data_victory[0:index_victory])
-        return jsonify(data_victory_process="test_from_python")
-
-=======
         print('in background_process_map!')
         return jsonify(data_victory_process=data_victory[0:index_victory], nb_votes_process=nb_votes)
->>>>>>> 261685a526983e6c9ad3b4e6b45fdaa83b4af00c
     except Exception as e:
         return str(e)
 
 @app.route('/')
 def index():
-<<<<<<< HEAD
     nb_of_votes, nb_of_suffrages, nb_Abstention, nb_of_votes_republicains, nb_of_votes_democrates, nb_of_votes_autres = get_indicators(collection_result_by_state,collection_state)
 
     # unite = 1000000 # millier
@@ -127,10 +108,8 @@ def index():
                            # nb_of_votes_democrates = str(nb_of_votes_democrates),
                            # nb_of_votes_autres = str(nb_of_votes_autres)
                            )
-=======
-    complete_result = get_all_data()
+
     return render_template('index.html')
->>>>>>> 261685a526983e6c9ad3b4e6b45fdaa83b4af00c
 
 
 if __name__ == "__main__":
