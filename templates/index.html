@@ -117,33 +117,33 @@
           <div class="row tile_count">
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" >
               <span class="count_top"><i class="fa fa-user"></i> Votants</span>
-              <div class="count" id=Votants>2500</div>
-              <span class="count_bottom"><i class="green">4% </i> 15 mn</span>
+              <div class="count" id=Votants>{{ nb_of_votes }}</div>
+              <span class="count_bottom"><i class="green"> </i> millions</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Suffrages exprimés</span>
-              <div class="count" id=Suffrages>123.50</div>
-              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> 15 mn</span>
+              <div class="count" id=Suffrages>{{ nb_of_suffrages }}</div>
+              <span class="count_bottom"><i class="green"> </i> millions</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Abstention</span>
-              <div class="count green" id=Abstention>2,500</div>
-              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> 15 mn</span>
+              <div class="count green" id=Abstention>{{ nb_Abstention }}</div>
+              <span class="count_bottom"><i class="green"> </i> millions</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Republicains</span>
-              <div class="count" id=Republicains>4,567</div>
-              <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> 15 mn</span>
+              <div class="count" id=Republicains>{{ nb_of_votes_republicains }}</div>
+              <span class="count_bottom"><i class="red"> </i> millions</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Démocrates</span>
-              <div class="count" id=Democrates>2,315</div>
-              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> 15 mn</span>
+              <div class="count" id=Democrates>{{ nb_of_votes_democrates }}</div>
+              <span class="count_bottom"><i class="green"> </i> millions</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Autres</span>
-              <div class="count">7,325</div>
-              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>0% </i> 15 mn</span>
+              <div class="count" id=Autres>{{ nb_of_votes_autres }}</div>
+              <span class="count_bottom"><i class="green"> </i> millions</span>
             </div>
           </div>
           <!-- /top tiles -->
@@ -405,9 +405,9 @@
         // var data_victory = {{ data_victory|safe }};
         var state_clicked = {value:"nan"};
     </script>
-    <script src="static/maps/jquery.vmap.usa.js" charset="utf-8"></script>
-    <script src="static/custo/map.js" charset="utf-8"></script>
-    <script src="static/custo/pie.js" charset="utf-8"></script>
+    <!--<script src="static/maps/jquery.vmap.usa.js" charset="utf-8"></script>-->
+    <!--<script src="static/custo/map.js" charset="utf-8"></script>-->
+    <!--<script src="static/custo/pie.js" charset="utf-8"></script>-->
     <script src="static/custo/indicators.js" charset="utf-8"></script>
 
     <!-- Flot -->
