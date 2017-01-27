@@ -1,34 +1,51 @@
 from flask import Flask, request, render_template, url_for, Blueprint, jsonify
-from pymongo import MongoClient
+from pymongo import MongoClient, errors
 import json
 from bson import json_util
 from bson.json_util import dumps
-import pandas  as pd
-
-import os
+import pandas as pd
+import time
 from indicators import *
 import locale
+import logging, sys
+
+logging.basicConfig(stream=sys.stderr)
 
 
 # Connection to MongoDB
-client = MongoClient("localhost", 27017)
+#client = MongoClient("localhost", 27017)
+client = MongoClient('mongodb://sfr:sfr@172.31.19.90,172.31.34.107,172.31.21.107/election?replicaset=rs0', 27017)
 db = client['election']
 collection_state = db['state']
 collection_result = db['result_by_state']
 
 # Fonction qui retourne toutes les données de résultat agrégées
 def get_all_data():
-    result = pd.DataFrame(list(collection_result.find()))
-    state = pd.DataFrame(list(collection_state.find()))
-    state['state_code'] = state['state_code'].str.lower()
-    complete_result = pd.merge(result, state, on='state_name')
+    complete_result = ""
+    for i in range(5):
+        try:
+            result = pd.DataFrame(list(collection_result.find()))
+            state = pd.DataFrame(list(collection_state.find()))
+            state['state_code'] = state['state_code'].str.lower()
+            complete_result = pd.merge(result, state, on='state_name')
+            break
+        except errors.AutoReconnect:
+            time.sleep(pow(2, i))
+
     return complete_result
 
 # Fonction qui retourne pour chaque état les résultats
 def get_victory_by_state (complete_result):
-    idx_winner = complete_result.groupby(['state_code'])['nb_of_vote'].transform(max) == complete_result['nb_of_vote']
-    data_victory = complete_result[idx_winner][["state_code", "candidate"]].as_matrix()
-    data_victory = data_victory.tolist()
+    data_victory = ""
+    for i in range(5):
+        try:
+            idx_winner = complete_result.groupby(['state_code'])['nb_of_vote'].transform(max) == complete_result['nb_of_vote']
+            data_victory = complete_result[idx_winner][["state_code", "candidate"]].as_matrix()
+            data_victory = data_victory.tolist()
+            break
+        except errors.AutoReconnect:
+                time.sleep(pow(2, i))
+
     return data_victory
 
 # Fonction qui retourne le nombre de votes par etat et par candidat
