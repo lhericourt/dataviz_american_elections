@@ -126,15 +126,15 @@
             </div>
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Abstention</span>
-              <div class="count green" id=Abstention>{{ nb_Abstention }}</div>
+              <div class="count top" id=Abstention>{{ nb_Abstention }}</div>
               <span class="count_bottom"><i class="green"> </i> millions</span>
             </div>
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-user"></i> Votes Republicains</span>
-              <div class="count" id=Republicains>{{ nb_of_votes_republicains }}</div>
+            <div class="red col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top" ><i class="fa fa-user"></i> Votes Republicains</span>
+              <div class="count" id=Republicains class="count green">{{ nb_of_votes_republicains }}</div>
               <span class="count_bottom"><i class="red"> </i> millions</span>
             </div>
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <div class="blue col-md-2 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Votes Démocrates</span>
               <div class="count" id=Democrates>{{ nb_of_votes_democrates }}</div>
               <span class="count_bottom"><i class="green"> </i> millions</span>
@@ -153,7 +153,7 @@
 
                 <div class="row x_title">
                   <div class="col-md-6">
-                    <h3>Evolution des suffrages <small>intervalle de 15 mn</small></h3>
+                    <h3>Evolution Grands Electeurs <small></small></h3>
                   </div>
                   <div class="col-md-6">
                     <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
@@ -163,13 +163,16 @@
                   </div>
                 </div>
 
-                <div class="col-md-9 col-sm-9 col-xs-12">
-                  <div id="placeholder33" style="height: 260px; display: none" class="demo-placeholder"></div>
-                  <div style="width: 100%;">
-                    <div id="canvas_dahs" class="demo-placeholder" style="width: 100%; height:270px;"></div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-12 bg-white">
+               <div class="x_content">
+                <div id="echart_line" style="height:350px;"></div>
+
+                <input type="hidden" id="trump_big_elector_timeline">
+                <input type="hidden" id="clinton_big_elector_timeline">
+                <input type="hidden" id="autres_big_elector_timeline">
+                <input type="hidden" id="current_date">
+               </div>
+
+ <!--                 <div class="col-md-3 col-sm-3 col-xs-12 bg-white">
                   <div class="x_title">
                     <h2>Résumé</h2>
                     <div class="clearfix"></div>
@@ -205,7 +208,7 @@
 
                   </div>
 
-                </div>
+                </div> -->
 
                 <div class="clearfix"></div>
               </div>
@@ -444,86 +447,339 @@
     <script>
         var state_clicked = {value:"nan", nb_votes:{}};
     </script>
+
     <script src="static/maps/jquery.vmap.usa.js" charset="utf-8"></script>
     <script src="static/custo/map.js" charset="utf-8"></script>
     <script src="static/custo/pie.js" charset="utf-8"></script>
+
+
+    <!-- ECharts -->
+    <script src="static/vendors/echarts/dist/echarts.min.js"></script>
+    <script src="static/vendors/echarts/map/js/world.js"></script>
+
     <script src="static/custo/histo.js" charset="utf-8"></script>
     <script src="static/custo/indicators.js" charset="utf-8"></script>
 
+
     <!-- Flot -->
     <script>
-      $(document).ready(function() {
-        var data1 = [
-          [gd(2012, 1, 1), 17],
-          [gd(2012, 1, 2), 74],
-          [gd(2012, 1, 3), 6],
-          [gd(2012, 1, 4), 39],
-          [gd(2012, 1, 5), 20],
-          [gd(2012, 1, 6), 85],
-          [gd(2012, 1, 7), 7]
-        ];
 
-        var data2 = [
-          [gd(2012, 1, 1), 82],
-          [gd(2012, 1, 2), 23],
-          [gd(2012, 1, 3), 66],
-          [gd(2012, 1, 4), 9],
-          [gd(2012, 1, 5), 119],
-          [gd(2012, 1, 6), 6],
-          [gd(2012, 1, 7), 9]
-        ];
-        $("#canvas_dahs").length && $.plot($("#canvas_dahs"), [
-          data1, data2
-        ], {
-          series: {
-            lines: {
-              show: false,
-              fill: true
-            },
-            splines: {
-              show: true,
-              tension: 0.4,
-              lineWidth: 1,
-              fill: 0.4
-            },
-            points: {
-              radius: 0,
-              show: true
-            },
-            shadowSize: 2
+  var theme = {
+          color: [
+              '#26B99A', '#34495E', '#BDC3C7', '#3498DB',
+              '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
+          ],
+
+          title: {
+              itemGap: 8,
+              textStyle: {
+                  fontWeight: 'normal',
+                  color: '#408829'
+              }
+          },
+
+          dataRange: {
+              color: ['#1f610a', '#97b58d']
+          },
+
+          toolbox: {
+              color: ['#408829', '#408829', '#408829', '#408829']
+          },
+
+          tooltip: {
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              axisPointer: {
+                  type: 'line',
+                  lineStyle: {
+                      color: '#408829',
+                      type: 'dashed'
+                  },
+                  crossStyle: {
+                      color: '#408829'
+                  },
+                  shadowStyle: {
+                      color: 'rgba(200,200,200,0.3)'
+                  }
+              }
+          },
+
+          dataZoom: {
+              dataBackgroundColor: '#eee',
+              fillerColor: 'rgba(64,136,41,0.2)',
+              handleColor: '#408829'
           },
           grid: {
-            verticalLines: true,
-            hoverable: true,
-            clickable: true,
-            tickColor: "#d5d5d5",
-            borderWidth: 1,
-            color: '#fff'
+              borderWidth: 0
           },
-          colors: ["rgba(38, 185, 154, 0.38)", "rgba(3, 88, 106, 0.38)"],
-          xaxis: {
-            tickColor: "rgba(51, 51, 51, 0.06)",
-            mode: "time",
-            tickSize: [1, "day"],
-            //tickLength: 10,
-            axisLabel: "Date",
-            axisLabelUseCanvas: true,
-            axisLabelFontSizePixels: 12,
-            axisLabelFontFamily: 'Verdana, Arial',
-            axisLabelPadding: 10
-          },
-          yaxis: {
-            ticks: 8,
-            tickColor: "rgba(51, 51, 51, 0.06)",
-          },
-          tooltip: false
-        });
 
-        function gd(year, month, day) {
-          return new Date(year, month - 1, day).getTime();
-        }
+          categoryAxis: {
+              axisLine: {
+                  lineStyle: {
+                      color: '#408829'
+                  }
+              },
+              splitLine: {
+                  lineStyle: {
+                      color: ['#eee']
+                  }
+              }
+          },
+
+          valueAxis: {
+              axisLine: {
+                  lineStyle: {
+                      color: '#408829'
+                  }
+              },
+              splitArea: {
+                  show: true,
+                  areaStyle: {
+                      color: ['rgba(250,250,250,0.1)', 'rgba(200,200,200,0.1)']
+                  }
+              },
+              splitLine: {
+                  lineStyle: {
+                      color: ['#eee']
+                  }
+              }
+          },
+          timeline: {
+              lineStyle: {
+                  color: '#408829'
+              },
+              controlStyle: {
+                  normal: {color: '#408829'},
+                  emphasis: {color: '#408829'}
+              }
+          },
+
+          k: {
+              itemStyle: {
+                  normal: {
+                      color: '#68a54a',
+                      color0: '#a9cba2',
+                      lineStyle: {
+                          width: 1,
+                          color: '#408829',
+                          color0: '#86b379'
+                      }
+                  }
+              }
+          },
+          map: {
+              itemStyle: {
+                  normal: {
+                      areaStyle: {
+                          color: '#ddd'
+                      },
+                      label: {
+                          textStyle: {
+                              color: '#c12e34'
+                          }
+                      }
+                  },
+                  emphasis: {
+                      areaStyle: {
+                          color: '#99d2dd'
+                      },
+                      label: {
+                          textStyle: {
+                              color: '#c12e34'
+                          }
+                      }
+                  }
+              }
+          },
+          force: {
+              itemStyle: {
+                  normal: {
+                      linkStyle: {
+                          strokeColor: '#408829'
+                      }
+                  }
+              }
+          },
+          chord: {
+              padding: 4,
+              itemStyle: {
+                  normal: {
+                      lineStyle: {
+                          width: 1,
+                          color: 'rgba(128, 128, 128, 0.5)'
+                      },
+                      chordStyle: {
+                          lineStyle: {
+                              width: 1,
+                              color: 'rgba(128, 128, 128, 0.5)'
+                          }
+                      }
+                  },
+                  emphasis: {
+                      lineStyle: {
+                          width: 1,
+                          color: 'rgba(128, 128, 128, 0.5)'
+                      },
+                      chordStyle: {
+                          lineStyle: {
+                              width: 1,
+                              color: 'rgba(128, 128, 128, 0.5)'
+                          }
+                      }
+                  }
+              }
+          },
+          gauge: {
+              startAngle: 225,
+              endAngle: -45,
+              axisLine: {
+                  show: true,
+                  lineStyle: {
+                      color: [[0.2, '#86b379'], [0.8, '#68a54a'], [1, '#408829']],
+                      width: 8
+                  }
+              },
+              axisTick: {
+                  splitNumber: 10,
+                  length: 12,
+                  lineStyle: {
+                      color: 'auto'
+                  }
+              },
+              axisLabel: {
+                  textStyle: {
+                      color: 'auto'
+                  }
+              },
+              splitLine: {
+                  length: 18,
+                  lineStyle: {
+                      color: 'auto'
+                  }
+              },
+              pointer: {
+                  length: '90%',
+                  color: 'auto'
+              },
+              title: {
+                  textStyle: {
+                      color: '#333'
+                  }
+              },
+              detail: {
+                  textStyle: {
+                      color: 'auto'
+                  }
+              }
+          },
+          textStyle: {
+              fontFamily: 'Arial, Verdana, sans-serif'
+          }
+      }
+
+  document.getElementById('trump_big_elector_timeline').value = {{trump_big_elector_timeline}}
+  document.getElementById('clinton_big_elector_timeline').value = {{clinton_big_elector_timeline}}
+  document.getElementById('autres_big_elector_timeline').value = {{autres_big_elector_timeline}}
+
+
+  var trump_big_elector_timeline = new Array();
+  trump_big_elector_timeline.push({{trump_big_elector_timeline}})
+  var clinton_big_elector_timeline = new Array();
+  clinton_big_elector_timeline.push({{clinton_big_elector_timeline}})
+  var autres_big_elector_timeline = new Array();
+  autres_big_elector_timeline.push({{autres_big_elector_timeline}})
+
+  var my_date = new Date()
+  var current_date = new Array();
+  current_date.push(my_date.getHours()+ ":" +my_date.getMinutes())
+  document.getElementById('current_date').value = my_date.getHours()+ ":" +my_date.getMinutes()
+
+  var echartLine = echarts.init(document.getElementById('echart_line'), theme);
+
+      echartLine.setOption({
+        title: {
+          text: '',
+          subtext: ''
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          x: 220,
+          y: 40,
+          data: ['Trump', 'Clinton', 'Autres']
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            magicType: {
+              show: true,
+              title: {
+                line: 'Line',
+                bar: 'Bar',
+                stack: 'Stack',
+                tiled: 'Tiled'
+              },
+              type: ['line', 'bar', 'stack', 'tiled']
+            },
+            restore: {
+              show: true,
+              title: "Restore"
+            },
+            saveAsImage: {
+              show: true,
+              title: "Save Image"
+            }
+          }
+        },
+        calculable: true,
+        xAxis: [{
+          type: 'category',
+          boundaryGap: false,
+          data: current_date
+        }],
+        yAxis: [{
+          type: 'value'
+        }],
+        series: [{
+          name: 'Trump',
+          type: 'line',
+          smooth: true,
+          itemStyle: {
+            normal: {
+              areaStyle: {
+                type: 'default'
+              }
+            }
+          },
+          data: trump_big_elector_timeline
+        }, {
+          name: 'Clinton',
+          type: 'line',
+          smooth: true,
+          itemStyle: {
+            normal: {
+              areaStyle: {
+                type: 'default'
+              }
+            }
+          },
+          data: clinton_big_elector_timeline
+        }, {
+          name: 'Autres',
+          type: 'line',
+          smooth: true,
+          itemStyle: {
+            normal: {
+              areaStyle: {
+                type: 'default'
+              }
+            }
+          },
+          data: autres_big_elector_timeline
+        }]
       });
     </script>
+    <script src="static/custo/indicators.js" charset="utf-8"></script>
     <!-- /Flot -->
 
     <!-- JQVMap old

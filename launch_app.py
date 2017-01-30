@@ -3,7 +3,14 @@ from pymongo import MongoClient, errors
 import json
 from bson import json_util
 from bson.json_util import dumps
-import pandas as pd
+
+import pandas  as pd
+import numpy as np
+import os
+from indicators import *
+import locale
+from numpy.random import randint
+
 import time
 from indicators import *
 import locale
@@ -11,6 +18,8 @@ import logging, sys
 
 logging.basicConfig(stream=sys.stderr)
 
+VOTE_REPUBLICAIN = "Trump"
+VOTE_DEMOCRATE = "Clinton"
 
 # Connection to MongoDB
 client = MongoClient("localhost", 27017)
@@ -81,12 +90,34 @@ app = Flask(__name__)
 def background_process_indicators():
     try:
 
-        #print('====== in background_process_indicators! =====')
-        #candidate = request.args.get('candidate', "", type=str)
+        print('====== in background_process_indicators! =====')
+        #trump_big_elector_timeline = request.args.getlist('trump_big_elector_timeline[]')
+        #print(trump_big_elector_timeline)
+        #clinton_big_elector_timeline = request.args.get('clinton_big_elector_timeline', "", type=list)
+        #autres_big_elector_timeline = request.args.get('autres_big_elector_timeline', "", type=list)
 
-        nb_of_votes, nb_of_suffrages, nb_Abstention, nb_of_votes_republicains, nb_of_votes_democrates, nb_of_votes_autres = get_indicators(collection_result,collection_state)
+
+
+        nb_of_votes, nb_of_suffrages, nb_Abstention, nb_of_votes_republicains, nb_of_votes_democrates, nb_of_votes_autres, big_elector = get_indicators(collection_result,collection_state)
 
         #print ("votants = "+str(nb_of_votes)+" sufrages = "+str(nb_of_suffrages)+" Abstention = "+str(nb_Abstention)+" republicains = "+str(nb_of_votes_republicains)+" democrates = "+str(nb_of_votes_democrates)+" autres = "+str(nb_of_votes_autres))
+
+        # trump_big_elector_timeline = list(randint(0, 9, size=7))
+        # clinton_big_elector_timeline = list(randint(0, 9, size=7))
+        # autres_big_elector_timeline = list(randint(0, 9, size=7))
+
+        trump_big_elector_timeline = 0
+        clinton_big_elector_timeline = 0
+        autres_big_elector_timeline = 0
+
+        for k,v in big_elector.items():
+            if (k == VOTE_REPUBLICAIN):
+                trump_big_elector_timeline = v
+            elif (k == VOTE_DEMOCRATE):
+                clinton_big_elector_timeline = v
+            else:
+                autres_big_elector_timeline = v
+
 
         unite = 1000000 # millier
         nb_of_votes = (format(nb_of_votes / unite, ",f"))[:5]
@@ -101,8 +132,11 @@ def background_process_indicators():
                        nb_Abstention=str(nb_Abstention),
                        nb_of_votes_republicains=str(nb_of_votes_republicains),
                        nb_of_votes_democrates = str(nb_of_votes_democrates),
-                       nb_of_votes_autres = str(nb_of_votes_autres)
-                       ,
+                       nb_of_votes_autres = str(nb_of_votes_autres),
+                       #big_elector = big_elector,
+                        trump_big_elector_timeline  = str(trump_big_elector_timeline),
+                        clinton_big_elector_timeline = str(clinton_big_elector_timeline),
+                        autres_big_elector_timeline = str(autres_big_elector_timeline)
                        )
     except Exception as e:
         print(e)
@@ -139,7 +173,23 @@ def background_process_histo():
 
 @app.route('/')
 def index():
-    nb_of_votes, nb_of_suffrages, nb_Abstention, nb_of_votes_republicains, nb_of_votes_democrates, nb_of_votes_autres = get_indicators(collection_result,collection_state)
+    nb_of_votes, nb_of_suffrages, nb_Abstention, nb_of_votes_republicains, nb_of_votes_democrates, nb_of_votes_autres, big_elector = get_indicators(collection_result,collection_state)
+
+    # trump_big_elector_timeline = list(randint(0, 9, size=7))
+    # clinton_big_elector_timeline = list(randint(0, 9, size=7))
+    # autres_big_elector_timeline = list(randint(0, 9, size=7))
+
+    trump_big_elector_timeline = 0
+    clinton_big_elector_timeline = 0
+    autres_big_elector_timeline = 0
+
+    for k,v in big_elector.items():
+        if (k == VOTE_REPUBLICAIN):
+            trump_big_elector_timeline = v
+        elif (k == VOTE_DEMOCRATE):
+            clinton_big_elector_timeline = v
+        else:
+            autres_big_elector_timeline = v
 
     unite = 1000000 # millier
     nb_of_votes = (format(nb_of_votes / unite, ",f"))[:5]
@@ -155,7 +205,11 @@ def index():
                            nb_Abstention=str(nb_Abstention),
                            nb_of_votes_republicains=str(nb_of_votes_republicains),
                            nb_of_votes_democrates = str(nb_of_votes_democrates),
-                           nb_of_votes_autres = str(nb_of_votes_autres)
+                           nb_of_votes_autres = str(nb_of_votes_autres),
+                           #big_elector = big_elector
+                           trump_big_elector_timeline  = str(trump_big_elector_timeline),
+                           clinton_big_elector_timeline = str(clinton_big_elector_timeline),
+                           autres_big_elector_timeline = str(autres_big_elector_timeline)
                            )
 
 

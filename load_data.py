@@ -4,6 +4,7 @@ import glob
 import json
 import time
 import re
+import pymongo
 from collections import Counter
 
 DB = "election"
@@ -47,20 +48,26 @@ while minute <= 60:
 					data_result_by_state["nb_of_vote"] = int(line[3].strip())
 					#print(data_result_by_state)
 					collection_result_by_state.insert(data_result_by_state)
-	time.sleep(60)
+	time.sleep(5)
 	minute = minute + 1
-	if (minute == 60):
-		break
+	# if (minute == 10):
+	# 	break
 
-
-
-
-
-# result_by_state_nb_of_votes = "nb_of_votes"
+# result_by_state_nb_of_votes = "nb_of_vote"
 # result_by_state_candidate = "candidate"
 # result_by_state_name = "state_name"
 # state_nb_subscriptors  = "nb_subscriptors"
+# state_nb_electors  = "nb_electors"
 
+
+# winner = collection_result_by_state.find({result_by_state_name:"Alabama"},
+#                                          {result_by_state_candidate:"1",
+#                                          result_by_state_name:"1",
+#                                          "_id":0,
+#                                          result_by_state_nb_of_votes:"1"}).sort([(result_by_state_nb_of_votes,pymongo.DESCENDING)]).limit(1)
+
+# for candidate in winner:
+# 	print (candidate[result_by_state_candidate], candidate[result_by_state_nb_of_votes])
 
 # result_by_state = collection_result_by_state.find({},{result_by_state_nb_of_votes:"1","_id":"0",result_by_state_candidate:"1", result_by_state_name:"1"})
 
@@ -82,4 +89,6 @@ while minute <= 60:
 # print ((format(val, ",f"))[:5])
 # val1 = 200000 /1000000
 # print ((format(val1, ",f"))[:5])
+
+
 
