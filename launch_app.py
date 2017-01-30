@@ -1,19 +1,8 @@
-from flask import Flask, request, render_template, url_for, Blueprint, jsonify
+from flask import Flask, render_template, jsonify
 from pymongo import MongoClient, errors
-import json
-from bson import json_util
-from bson.json_util import dumps
 
-import pandas  as pd
-import numpy as np
-import os
+import pandas as pd
 from indicators import *
-import locale
-from numpy.random import randint
-
-import time
-from indicators import *
-import locale
 import logging, sys
 
 logging.basicConfig(stream=sys.stderr)
