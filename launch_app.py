@@ -70,6 +70,7 @@ def get_estimated_electors(data_victory):
     clinton_assumed_victory = compute_victory_df[(compute_victory_df["winner"].isnull()) & (compute_victory_df["forcast"] == -1)]
     trump_nb_electors =  trump_assumed_victory["nb_electors"].sum() + trump_real_victory["nb_electors"].sum()
     clinton_nb_electors =  clinton_assumed_victory["nb_electors"].sum() + clinton_real_victory["nb_electors"].sum()
+
     return trump_nb_electors, clinton_nb_electors
 
 

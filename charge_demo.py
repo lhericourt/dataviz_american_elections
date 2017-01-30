@@ -1,3 +1,9 @@
+# coding: utf-8
+
+import sys
+sys.path.append('/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/')
+sys.path.append("/Users/lolo/3.5.1 - Pour Big Data/lib/python3.5/site-packages/")
+
 from pymongo import MongoClient, errors
 import glob
 import json
@@ -12,13 +18,17 @@ STATE = "state"
 RESULT_BY_STATE = "result_by_state"
 
 
-client = MongoClient('mongodb://sfr:sfr@172.31.19.90,172.31.34.107,172.31.21.107/election?replicaset=rs0', 27017)
+#client = MongoClient('mongodb://sfr:sfr@172.31.19.90,172.31.34.107,172.31.21.107/election?replicaset=rs0', 27017)
+client = MongoClient("localhost", 27017)
+
 db = client[DB]
 collection_vote = db[VOTE]
 collection_state = db[STATE]
 collection_result_by_state = db[RESULT_BY_STATE]
 
-basename = "/home/ubuntu/data/etats_usa"
+#basename = "/home/ubuntu/data/etats_usa"
+basename = "/Users/lolo/Développement/Projet NoSQL/data/etats_usa"
+
 vote_file_list = glob.glob(basename+"/*.txt")
 
 minute = 11
@@ -51,7 +61,7 @@ while minute <= 60:
                                                 break
                                             except errors.AutoReconnect:
                                                 time.sleep(pow(2, i))
-        time.sleep(10)
+        time.sleep(5)
         minute = minute + 1
         # if (minute == 60):
         #       break
