@@ -1,5 +1,8 @@
 import pymongo
 
+from pymongo import errors
+import time
+
 VOTE_BLANC = "Blanc"
 VOTE_REPUBLICAIN = "Trump"
 VOTE_DEMOCRATE = "Clinton"
@@ -13,7 +16,12 @@ state_nb_electors = "nb_electors"
 id = "_id"
 
 def get_indicators(collection_result_by_state, collection_state):
-	result_by_state = collection_result_by_state.find({},{result_by_state_nb_of_votes:"1","_id":"0",result_by_state_candidate:"1", result_by_state_name:"1"})
+	for i in range(5):
+		try:
+			result_by_state = collection_result_by_state.find({},{result_by_state_nb_of_votes:"1","_id":"0",result_by_state_candidate:"1", result_by_state_name:"1"})
+			break
+		except errors.AutoReconnect:
+			time.sleep(pow(2, i))
 
 	nb_of_votes = 0
 	nb_of_votes_republicains = 0
@@ -43,21 +51,41 @@ def get_indicators(collection_result_by_state, collection_state):
 	nb_Abstention = 0
 	big_elector = {}
 	for k, v in Abstention_dict.items():
-		# get number abstention
-		state = collection_state.find_one({result_by_state_name:k},{state_nb_electors:"1","_id":"0",state_nb_subscriptors:"1"})
-		nb_Abstention = nb_Abstention + (state[state_nb_subscriptors] - v)
-		# get big elector numbers
-		winner = collection_result_by_state.find({result_by_state_name:k},
-	                                         {result_by_state_candidate:"1",
-	                                         result_by_state_name:"1",
-	                                         "_id":0,
-	                                         result_by_state_nb_of_votes:"1"}).sort([(result_by_state_nb_of_votes,pymongo.DESCENDING)]).limit(1)
 
-		for candidate_winner in winner: # should be unique
-			c = candidate_winner[result_by_state_candidate]
-			big_elector[c] = big_elector.get(c, 0) + int(state[state_nb_electors])
+		# get number abstention
+		# state = collection_state.find_one({result_by_state_name:k},{state_nb_electors:"1","_id":"0",state_nb_subscriptors:"1"})
+		# nb_Abstention = nb_Abstention + (state[state_nb_subscriptors] - v)
+		# # get big elector numbers
+		# winner = collection_result_by_state.find({result_by_state_name:k},
+	 #                                         {result_by_state_candidate:"1",
+	 #                                         result_by_state_name:"1",
+	 #                                         "_id":0,
+	 #                                         result_by_state_nb_of_votes:"1"}).sort([(result_by_state_nb_of_votes,pymongo.DESCENDING)]).limit(1)
+
+		# for candidate_winner in winner: # should be unique
+		# 	c = candidate_winner[result_by_state_candidate]
+		# 	big_elector[c] = big_elector.get(c, 0) + int(state[state_nb_electors])
 
 	#print(big_elector)
+
+		for i in range(5):
+			try:
+				state = collection_state.find_one({result_by_state_name:k},{state_nb_electors:"1","_id":"0",state_nb_subscriptors:"1"})
+				nb_Abstention = nb_Abstention + (state[state_nb_subscriptors] - v)
+				# get big elector numbers
+				winner = collection_result_by_state.find({result_by_state_name:k},
+			                                         {result_by_state_candidate:"1",
+			                                         result_by_state_name:"1",
+			                                         "_id":0,
+			                                         result_by_state_nb_of_votes:"1"}).sort([(result_by_state_nb_of_votes,pymongo.DESCENDING)]).limit(1)
+
+				for candidate_winner in winner: # should be unique
+					c = candidate_winner[result_by_state_candidate]
+					big_elector[c] = big_elector.get(c, 0) + int(state[state_nb_electors])
+				break
+			except errors.AutoReconnect:
+				time.sleep(pow(2, i))
+
 
 	return nb_of_votes, nb_of_suffrages, nb_Abstention, nb_of_votes_republicains, nb_of_votes_democrates, nb_of_votes_autres,big_elector
 
