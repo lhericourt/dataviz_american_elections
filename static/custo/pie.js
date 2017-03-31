@@ -122,7 +122,6 @@ $(document).ready(function() {
         };
 
         $('#canvas1').empty();
-        //$('#canvas1').replaceWith("<canvas id='canvas1' height='140' width=‘140' style=‘margin: 15px 10px 10px 0'></canvas>");
 
 
         new Chart(document.getElementById("canvas1"), {
